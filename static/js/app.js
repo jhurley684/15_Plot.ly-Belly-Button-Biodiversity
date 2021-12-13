@@ -3,6 +3,16 @@
 console.log("This is plots.js")
 
 
+// Event handler for change
+function optionChanged(id) 
+    console.log(`optionChanged(${id})`);
+
+    // Display the barchart
+    // Display the bubblechart
+    // Populate demographic info
+
+
+
 
 function InitDashboard()
 {
@@ -15,7 +25,19 @@ function InitDashboard()
            
             coulsole.log(data);
 
-            let sampleNames = data
+            let sampleNames = data.names;
+
+            sampleNames.forEach(sampleId => {
+                selector.append("option")
+                .text(sameleID)
+                .property("value", sampleId);
+
+                // detect change 
+
+
+
+
+            })
 
         });
 }
