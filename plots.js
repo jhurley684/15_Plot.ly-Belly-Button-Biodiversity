@@ -60,22 +60,19 @@ function DrawBubblechart(sampleId) {
                 let bubbleData = {
                         x: otu_ids,
                         y: sample_values,
-                        // type: "scatter",
                         mode: 'markers',
                         marker: {
-                        //   size: [sample_values],
-                          color: [otu_ids]
+                                colors: [otu_ids]
                         },
-                        text: [otu_labels],
-                        margin: [20,20]
-                        // orientation: "h"
+                        text: otu_labels,  //hover text
                 };
+
 
                 var layout = {
                         title: "Bacteria Cultures Per Sample",
                         showlegend: false,
                         height: 600,
-                        width: 600,
+                        width: 600
                 };
 
                 let bubbleArray = [bubbleData];
