@@ -28,6 +28,7 @@ function DrawBarchart(sampleId) {
 
                 let barArray = [barData];
 
+
                 Plotly.newPlot("bar", barArray);
 
         });
@@ -55,10 +56,11 @@ function DrawBubblechart(sampleId) {
                 let bubbleData = {
                         x: otu_ids,
                         y: sample_values,
-                        mode: 'markers',
+                        mode: 'markers', 
                         marker: {
-                                colors: [otu_ids],
-                                // size: []
+                                color: otu_ids,
+                                colorscale: "Jet",
+                                size: sample_values
                         },
                         text: otu_labels,  //hover text
                 };
@@ -88,32 +90,40 @@ function ShowMetadata(sampleId)
                 
                 // This thing gets the id value from the selector
                 let metaData = data.metadata;  //  There is no metadata in data.samples.  It's in data.metadata
-                let resultArray = metaData.filter(m => m.id === sampleId);
+                let resultArray = metaData.filter(obj => obj.id == sampleId);
                 let result = resultArray[0];
-
                 console.log(result);
 
-                // let otu_ids = result.otu_ids;
-                // let otu_labels = result.otu_labels;
-                // let sample_values = result.sample_values;
-                // let yticks = otu_ids.slice(0, 10).map(otuId => `OTU ${otuId}`).reverse();
+                
+                //******************************************************************** */ 
 
+                //  Erin's hinted solution - would be more flexibl
+                // Object.entries(result).forEach(([key, value]) => 
+                //                var list = d3.select("panel-body");
+                //                append(".panel-body").text(`Key: ${key} and Value ${value}`));
 
+                // *******************************************************************
 
-                // //This gets the metadata into an array and prints it out
-                // let metaData = data.metadata;
+                
+                var id = result.id;
+                var age = result.age;
+                var bbtype = result.bbtype;
+                var ethnicity = result.ethnicity;
+                var gender = result.gender;
+                var location = result.location;
+                var wfreq = result.wfreq;
 
-                // console.log(metaData);  //  YES, metaData is being pulled form the json
+           
+                var list = d3.select(".panel-body");
 
-                // var metaArray = [metaData]
-
-                // for(var i = 0; i < metaArray. length ; i++){
-                  
-                // console. log(metaArray[i])
-                // }
-
-                var metaArray = [metaData]
-                Plotly.newPlot("sample-metadata", metaArray);
+                list.append("li").text(`id: ${id}`);
+                list.append("li").text(`age: ${age}`);
+                list.append("li").text(`bbtype: ${bbtype}`);
+                list.append("li").text(`ethnicity: ${ethnicity}`);
+                list.append("li").text(`gender: ${gender}`);
+                list.append("li").text(`location: ${location}`);
+                list.append("li").text(`wfreq: ${wfreq}`);
+      
         });
         
 }
@@ -124,34 +134,28 @@ function ShowMetadata(sampleId)
 
 //         d3.json("samples.json").then(data => {
                 
-//                 let samples = data.samples;
-//                 let resultArray = samples.filter(s => s.id === sampleId);
-//                 let result = resultArray[0];
+        // d3.json("samples.json").then(data => {
+                
+                
+        //         // This thing gets the id value from the selector
+        //         let metaData = data.metadata;  //  There is no metadata in data.samples.  It's in data.metadata
+        //         let resultArray = metaData.filter(obj => obj.id == sampleId);
+        //         let result = resultArray[0];
 
-//                 console.log(result);
-
-//                 let otu_ids = result.otu_ids;
-//                 let otu_labels = result.otu_labels;
-//                 let sample_values = result.sample_values;
-//                 let yticks = otu_ids.slice(0, 10).map(otuId => `OTU ${otuId}`).reverse();
-
-//                 let barData = {
-//                         x: sample_values.slice(0, 10).reverse(),
-//                         y: yticks, 
-//                         type: "bar",
-//                         text: otu_labels.slice(0, 10).reverse(),  //hover text
-//                         orientation: "h"
-//                 };
+        //         Object.entries(result).forEach(([key, value]) => console.log(`Key: ${key} and Value ${value}`));
+                
+        //         // <selector name>.append("p").text(${k}: ${v})
+        //         // selector.append("sample-metadata").text(${k}: ${v}); 
+                
+        // });
 
 
-//                 fig.add_trace(go.Indicator(
-//                         value = 200,
-//                         delta = {'reference': 160},
-//                         gauge = {
-//                             'axis': {'visible': False}},
-//                         domain = {'row': 0, 'column': 0}))
-
-
+//              fig.add_trace(go.Indicator(
+//                      value = 200,
+//                      delta = {'reference': 160},
+//                      gauge = {
+//                          'axis': {'visible': False}},
+//                      domain = {'row': 0, 'column': 0}))
 
 
 //                 let indicatorArray = [barData];
@@ -171,7 +175,7 @@ function optionChanged(id)
         DrawBarchart(id);
         DrawBubblechart(id);
         ShowMetadata(id);
-        DrawGague(id);
+        // DrawGague(id);
 
 }
 
