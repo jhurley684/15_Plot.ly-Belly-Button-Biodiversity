@@ -11,7 +11,7 @@ function DrawBarchart(sampleId) {
                 let resultArray = samples.filter(s => s.id === sampleId);
                 let result = resultArray[0];
 
-                console.log(result);
+                // console.log(result);
 
                 let otu_ids = result.otu_ids;
                 let otu_labels = result.otu_labels;
@@ -92,7 +92,7 @@ function ShowMetadata(sampleId)
                 let metaData = data.metadata;  //  There is no metadata in data.samples.  It's in data.metadata
                 let resultArray = metaData.filter(obj => obj.id == sampleId);
                 let result = resultArray[0];
-                console.log(result);
+                // console.log(result);
 
                 
                 //******************************************************************** */ 
@@ -129,66 +129,58 @@ function ShowMetadata(sampleId)
 }
 
 
-// function DrawGague(sampleId) {
-//         // console.log(`DrawBarchart(${sampleId})`);
-
-//         d3.json("samples.json").then(data => {
+function DrawGague(sampleId)
+{
+  
                 
-        // d3.json("samples.json").then(data => {
+        d3.json("samples.json").then(data => {
                 
                 
-        //         // This thing gets the id value from the selector
-        //         let metaData = data.metadata;  //  There is no metadata in data.samples.  It's in data.metadata
-        //         let resultArray = metaData.filter(obj => obj.id == sampleId);
-        //         let result = resultArray[0];
+                // This thing gets the id value from the selector
+                let metaData = data.metadata;  //  There is no metadata in data.samples.  It's in data.metadata
+                let resultArray = metaData.filter(obj => obj.id == sampleId);
+                let result = resultArray[0];
 
-        //         Object.entries(result).forEach(([key, value]) => console.log(`Key: ${key} and Value ${value}`));
-                
-        //         // <selector name>.append("p").text(${k}: ${v})
-        //         // selector.append("sample-metadata").text(${k}: ${v}); 
-                
-        // });
+                var wfreq = result.wfreq;
+                // console.log(wfreq);
 
 
-//              fig.add_trace(go.Indicator(
-//                      value = 200,
-//                      delta = {'reference': 160},
-//                      gauge = {
-//                          'axis': {'visible': False}},
-//                      domain = {'row': 0, 'column': 0}))
+                var data = [
+                        {
+                          type: "indicator",
+                          value: wfreq,
+                          delta: { reference: 160 },
+                          gauge: { axis: { visible: false, range: [0, 250] } },
+                          domain: { row: 0, column: 0 }
+                        },
+                ]
+        });
 
-
-//                 let indicatorArray = [barData];
-
-//                 Plotly.newPlot("Indicator", indicatorArray);
-
-//         });
-
-// }
+}
 
 
 
 function optionChanged(id)
 {
-        console.log(`optionChanged(${id})`);
+        // console.log(`optionChanged(${id})`);
 
         DrawBarchart(id);
         DrawBubblechart(id);
         ShowMetadata(id);
-        // DrawGague(id);
+        DrawGague(id);
 
 }
 
 
 function InitDashboard()
 {
-        console.log("Initializing Dashboard");
+        // console.log("Initializing Dashboard");
         let selector = d3.select("#selDataset");
         
         // read data from dataset
         d3.json("samples.json").then(data=> {
            
-            console.log(data);
+        //     console.log(data);
 
             let sampleNames = data.names;
             sampleNames.forEach(sampleId => {
