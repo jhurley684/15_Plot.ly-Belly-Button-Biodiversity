@@ -1,6 +1,5 @@
 // This code taken from Dom's office hours session 12/11
 
-// console.log("This is plots.js");
 
 function DrawBarchart(sampleId) {
         // console.log(`DrawBarchart(${sampleId})`);
@@ -65,7 +64,6 @@ function DrawBubblechart(sampleId) {
                         text: otu_labels,  //hover text
                 };
 
-
                 var layout = {
                         title: "Bacteria Cultures Per Sample",
                         showlegend: false,
@@ -77,14 +75,11 @@ function DrawBubblechart(sampleId) {
 
                 Plotly.newPlot("bubble", bubbleArray, layout);
 
-
         });
-
 
 }
                
-function ShowMetadata(sampleId)
-{
+function ShowMetadata(sampleId) {
         d3.json("samples.json").then(data => {
                 
                 
@@ -92,19 +87,16 @@ function ShowMetadata(sampleId)
                 let metaData = data.metadata;  //  There is no metadata in data.samples.  It's in data.metadata
                 let resultArray = metaData.filter(obj => obj.id == sampleId);
                 let result = resultArray[0];
-                // console.log(result);
-
                 
                 //******************************************************************** */ 
 
-                //  Erin's hinted solution - would be more flexibl
+                //  Erin's solution - would be more flexible 
                 // Object.entries(result).forEach(([key, value]) => 
                 //                var list = d3.select("panel-body");
                 //                append(".panel-body").text(`Key: ${key} and Value ${value}`));
 
                 // *******************************************************************
-
-                
+   
                 var id = result.id;
                 var age = result.age;
                 var bbtype = result.bbtype;
@@ -113,7 +105,6 @@ function ShowMetadata(sampleId)
                 var location = result.location;
                 var wfreq = result.wfreq;
 
-           
                 var list = d3.select(".panel-body");
 
                 list.append("li").text(`id: ${id}`);
@@ -129,31 +120,35 @@ function ShowMetadata(sampleId)
 }
 
 
-function DrawGague(sampleId)
-{
-  
-                
+function DrawGague(sampleId) {
+    
         d3.json("samples.json").then(data => {
-                
-                
+                                
                 // This thing gets the id value from the selector
-                let metaData = data.metadata;  //  There is no metadata in data.samples.  It's in data.metadata
+                let metaData = data.metadata;  
                 let resultArray = metaData.filter(obj => obj.id == sampleId);
                 let result = resultArray[0];
 
                 var wfreq = result.wfreq;
-                // console.log(wfreq);
-
 
                 var data = [
                         {
-                          type: "indicator",
-                          value: wfreq,
-                          delta: { reference: 160 },
-                          gauge: { axis: { visible: false, range: [0, 250] } },
-                          domain: { row: 0, column: 0 }
-                        },
-                ]
+                                domain: { x: [0, 1], y: [0, 1] },
+                                value: result.wfreq,
+                                title: { text: "Wash Frequency" },
+                                type: "indicator",
+                                mode: "gauge+number",
+                                gauge: {
+                                  axis: { range: [null, 5] },
+                                  steps: [
+                                    { range: [0, 250], color: "lightgray" },
+                                    { range: [250, 400], color: "gray" }
+                                  ]},
+                        }
+                ];
+
+                var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+                Plotly.newPlot("gauge", data, layout);
         });
 
 }
@@ -194,6 +189,7 @@ function InitDashboard()
             DrawBarchart(sampleId);
             DrawBubblechart(sampleId);
             ShowMetadata(sampleId);
+            DrawGague(sampleId);
 
         });
 
