@@ -1,22 +1,26 @@
-// This code taken from Dom's office hours session 12/11
+// Some code taken from Dom's office hours session 12/11.
 
 
 function DrawBarchart(sampleId) {
-        // console.log(`DrawBarchart(${sampleId})`);
 
+        // Grab data from the samples json
         d3.json("samples.json").then(data => {
                 
+                // filter the data to match the drop-down selector
                 let samples = data.samples;
                 let resultArray = samples.filter(s => s.id === sampleId);
                 let result = resultArray[0];
 
-                // console.log(result);
 
+                // take ids, lables data, get the top 10 and reverse so that biggest values 
+                // show up on the top bar
                 let otu_ids = result.otu_ids;
                 let otu_labels = result.otu_labels;
                 let sample_values = result.sample_values;
                 let yticks = otu_ids.slice(0, 10).map(otuId => `OTU ${otuId}`).reverse();
 
+                
+                // Set up the bar plot & layout
                 let barData = {
                         x: sample_values.slice(0, 10).reverse(),
                         y: yticks, 
@@ -32,8 +36,11 @@ function DrawBarchart(sampleId) {
                 
                 console.log(layout);
 
+                
+                // get data in an array
                 let barArray = [barData];
-
+                
+                // plot the data in the array
                 Plotly.newPlot("bar", barArray, layout);
 
         });
@@ -44,20 +51,22 @@ function DrawBarchart(sampleId) {
 function DrawBubblechart(sampleId) {
         // console.log(`DrawBarchart(${sampleId})`);
 
+
+        // filter the data to match the drop-down selector
         d3.json("samples.json").then(data => {
                 
+                // filter the data to match the drop-down selector
                 let samples = data.samples;
                 let resultArray = samples.filter(s => s.id === sampleId);
                 let result = resultArray[0];
 
-                // console.log(result);
-
+                //  assign data elements to vars
                 let otu_ids = result.otu_ids;
                 let otu_labels = result.otu_labels;
                 let sample_values = result.sample_values;
                 let yticks = otu_ids.slice(0, 10).map(otuId => `OTU ${otuId}`);
 
-
+                // Set up the bubble graph plot
                 let bubbleData = {
                         x: otu_ids,
                         y: sample_values,
@@ -77,8 +86,12 @@ function DrawBubblechart(sampleId) {
                         width: 1200
                 };
 
+                
+                
+                // Get data in an array
                 let bubbleArray = [bubbleData];
 
+                // Plot the graph
                 Plotly.newPlot("bubble", bubbleArray, layout);
 
         });
@@ -88,20 +101,27 @@ function DrawBubblechart(sampleId) {
 function ShowMetadata(sampleId) {
         d3.json("samples.json").then(data => {
                 
-                // This thing gets the id value from the selector
+                // filter the data to match the drop-down selector
                 let metaData = data.metadata;  
                 let resultArray = metaData.filter(obj => obj.id == sampleId);
                 let result = resultArray[0];
 
+
+
                 // ************************************************************
+                // **  This method gets all metadata from sample regardless of number of items.
+                // **  and then prints them to screen.  (As opposed to other code below)
                 // ************************************************************
 
-
-
+                // create a var to hold what to put in #sample-metadata area
                 var metadata_div = d3.select("#sample-metadata");
 
+                
+                //  Clears out the metadata area before repopulating with new data
                 metadata_div.html("");
 
+
+                // Grabs the key and values from filtered result and appends to div
                 Object.entries(result).forEach(([key, value]) => {
                         console.log(`Key: ${key} and Value ${value}`);
                         metadata_div.append("p").text(`${key}: ${value}`)
@@ -109,14 +129,15 @@ function ShowMetadata(sampleId) {
                 
                 );
 
+
+
+
+                // ***********************************************************
+                //  This is the less flexible way of putting metadata into Demo Info area
+                // ***********************************************************
                 
-                // matadata-div.append("p").text(`${key}`)
 
-
-
-                // ***********************************************************
-                // ***********************************************************
-   
+                // // assign each element of data to a var
                 // var id = result.id;
                 // var age = result.age;
                 // var bbtype = result.bbtype;
@@ -125,10 +146,14 @@ function ShowMetadata(sampleId) {
                 // var location = result.location;
                 // var wfreq = result.wfreq;
 
+
+                // //Select the div class area to use 
                 // var list = d3.select(".panel-body");
 
+                // // Clear out Demo Info area
                 // list.html("");
 
+                // // Make a bullet point list of each data element
                 // list.append("li").text(`id: ${id}`);
                 // list.append("li").text(`age: ${age}`);
                 // list.append("li").text(`bbtype: ${bbtype}`);
@@ -136,6 +161,10 @@ function ShowMetadata(sampleId) {
                 // list.append("li").text(`gender: ${gender}`);
                 // list.append("li").text(`location: ${location}`);
                 // list.append("li").text(`wfreq: ${wfreq}`);
+
+                // ************************************************************
+                // ************************************************************
+
       
         });
         
@@ -144,9 +173,10 @@ function ShowMetadata(sampleId) {
 
 function DrawGague(sampleId) {
     
+        // Grab data from the samples json
         d3.json("samples.json").then(data => {
                                 
-                // This thing gets the id value from the selector
+                // filter the data to match the drop-down selector
                 let metaData = data.metadata;  
                 let resultArray = metaData.filter(obj => obj.id == sampleId);
                 let result = resultArray[0];
@@ -157,7 +187,7 @@ function DrawGague(sampleId) {
                         {
                                 domain: { x: [0, 1], y: [0, 1] },
                                 value: result.wfreq,
-                                title: { text: " Belly Button Wash Frequency <br\> Jim Hurley"},
+                                title: { text: " Belly Button Wash Frequency <br\> Scrubs per Week"},
                                 subtitle: {text: "Scrubs Per Week"},
                                 type: "indicator",
                                 mode: "gauge+number",
