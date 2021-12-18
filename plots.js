@@ -25,10 +25,16 @@ function DrawBarchart(sampleId) {
                         orientation: "h"
                 };
 
+                var layout = {
+                        title: {text: "Top 10 Bacteria Cultures Found"},
+                        barmode: 'stack'
+                      };
+                
+                console.log(layout);
+
                 let barArray = [barData];
 
-
-                Plotly.newPlot("bar", barArray);
+                Plotly.newPlot("bar", barArray, layout);
 
         });
 
@@ -82,38 +88,54 @@ function DrawBubblechart(sampleId) {
 function ShowMetadata(sampleId) {
         d3.json("samples.json").then(data => {
                 
-                
                 // This thing gets the id value from the selector
-                let metaData = data.metadata;  //  There is no metadata in data.samples.  It's in data.metadata
+                let metaData = data.metadata;  
                 let resultArray = metaData.filter(obj => obj.id == sampleId);
                 let result = resultArray[0];
+
+                // ************************************************************
+                // ************************************************************
+
+
+
+                var metadata_div = d3.select("#sample-metadata");
+
+                metadata_div.html("");
+
+                Object.entries(result).forEach(([key, value]) => {
+                        console.log(`Key: ${key} and Value ${value}`);
+                        metadata_div.append("p").text(`${key}: ${value}`)
+                }
                 
-                //******************************************************************** */ 
+                );
 
-                //  Erin's solution - would be more flexible 
-                // Object.entries(result).forEach(([key, value]) => 
-                //                var list = d3.select("panel-body");
-                //                append(".panel-body").text(`Key: ${key} and Value ${value}`));
+                
+                // matadata-div.append("p").text(`${key}`)
 
-                // *******************************************************************
+
+
+                // ***********************************************************
+                // ***********************************************************
    
-                var id = result.id;
-                var age = result.age;
-                var bbtype = result.bbtype;
-                var ethnicity = result.ethnicity;
-                var gender = result.gender;
-                var location = result.location;
-                var wfreq = result.wfreq;
+                // var id = result.id;
+                // var age = result.age;
+                // var bbtype = result.bbtype;
+                // var ethnicity = result.ethnicity;
+                // var gender = result.gender;
+                // var location = result.location;
+                // var wfreq = result.wfreq;
 
-                var list = d3.select(".panel-body");
+                // var list = d3.select(".panel-body");
 
-                list.append("li").text(`id: ${id}`);
-                list.append("li").text(`age: ${age}`);
-                list.append("li").text(`bbtype: ${bbtype}`);
-                list.append("li").text(`ethnicity: ${ethnicity}`);
-                list.append("li").text(`gender: ${gender}`);
-                list.append("li").text(`location: ${location}`);
-                list.append("li").text(`wfreq: ${wfreq}`);
+                // list.html("");
+
+                // list.append("li").text(`id: ${id}`);
+                // list.append("li").text(`age: ${age}`);
+                // list.append("li").text(`bbtype: ${bbtype}`);
+                // list.append("li").text(`ethnicity: ${ethnicity}`);
+                // list.append("li").text(`gender: ${gender}`);
+                // list.append("li").text(`location: ${location}`);
+                // list.append("li").text(`wfreq: ${wfreq}`);
       
         });
         
@@ -135,14 +157,20 @@ function DrawGague(sampleId) {
                         {
                                 domain: { x: [0, 1], y: [0, 1] },
                                 value: result.wfreq,
-                                title: { text: "Wash Frequency" },
+                                title: { text: " Belly Button Wash Frequency <br\> Jim Hurley"},
+                                subtitle: {text: "Scrubs Per Week"},
                                 type: "indicator",
                                 mode: "gauge+number",
                                 gauge: {
-                                  axis: { range: [null, 5] },
+                                  axis: { range: [null, 9] },
+                                  bar: { color: "blue"},
+                                  bgcolor: "white",
+                                  borderwidth: 2,
+                                  bordercolor: "gray",
                                   steps: [
-                                    { range: [0, 250], color: "lightgray" },
-                                    { range: [250, 400], color: "gray" }
+                                    { range: [0, 3], color: "lightgreen" },
+                                    { range: [3, 6], color: "yellow" },
+                                    { range: [6, 9], color: "red" },
                                   ]},
                         }
                 ];
@@ -157,8 +185,6 @@ function DrawGague(sampleId) {
 
 function optionChanged(id)
 {
-        // console.log(`optionChanged(${id})`);
-
         DrawBarchart(id);
         DrawBubblechart(id);
         ShowMetadata(id);
@@ -169,14 +195,11 @@ function optionChanged(id)
 
 function InitDashboard()
 {
-        // console.log("Initializing Dashboard");
         let selector = d3.select("#selDataset");
         
         // read data from dataset
         d3.json("samples.json").then(data=> {
            
-        //     console.log(data);
-
             let sampleNames = data.names;
             sampleNames.forEach(sampleId => {
                 selector.append("option")
